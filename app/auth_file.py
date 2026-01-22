@@ -49,11 +49,12 @@ def authenticate_user(username: str, password: str):
 def get_current_user(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        return payload
+        return payload   # payload contains username + role
     except JWTError:
         raise HTTPException(status_code=401, detail="Not authenticated")
 
+
 def admin_only(current_user=Depends(get_current_user)):
-    if current_user.get("role") != "admin":
+    if current_user["role"] != "admin":
         raise HTTPException(status_code=403, detail="Admin access required")
     return current_user
