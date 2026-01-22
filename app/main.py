@@ -31,7 +31,11 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()):
 def create_user(
     name: str,
     email: str,
-    current_user=Depends(get_current_user)
+    current_user=Depends(admin_only)
 ):
-    insert_user(name, email)
+    insert_user(
+        name=name,
+        email=email,
+        role=current_user["role"]  
+    )
     return {"message": "User created successfully"}
